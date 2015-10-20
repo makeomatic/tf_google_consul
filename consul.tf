@@ -2,22 +2,21 @@
 # Consul configuration
 #
 
-resource "google_compute_instance_template" "server" {
+resource "google_compute_instance" "consul" {
+  count = "${var.servers}"
+  zone = "${var.zone}"
+  name = "terraform-consul-${count.index}"
+  tags = [ "${var.tagName}", "master" ]
 
-  name = "terraform-consul"
-  description = "terraform consul server template"
-  instance_description = "terraform consul master server"
+  description = "terraform consul server"
   machine_type = "${var.instance_type}"
   can_ip_forward = false
-  automatic_restart = true
-  on_host_maintenance = "MIGRATE"
-  tags = [ "${var.tagName}", "master" ]
 
   # Create a new boot disk from an image
   disk {
-    source_image = "${lookup(var.ami, concat(var.region, "-", var.platform))}"
+    image = "${lookup(var.ami, concat(var.region, "-", var.platform))}"
     auto_delete = true
-    boot = true
+    type = "pd-standard"
   }
 
   network_interface {
@@ -28,7 +27,7 @@ resource "google_compute_instance_template" "server" {
   }
 
   metadata {
-    sshKeys = "${var.ssh_pub_keys}"
+    sshKeys = "${lookup(var.user, var.platform)}:${file(var.ssh_pub_path)}"
   }
 
   connection {
@@ -49,7 +48,8 @@ resource "google_compute_instance_template" "server" {
   provisioner "remote-exec" {
     inline = [
       "echo ${var.servers} > /tmp/consul-server-count",
-      "echo ${google_compute_instance_template.server.0.network_interface.access_config.nat_ip} > /tmp/consul-server-addr",
+      "echo ${google_compute_instance.consul.0.network_interface.0.address} > /tmp/consul-server-addr",
+      "echo ${var.consul_flags} > /tmp/consul-flags"
     ]
   }
 
@@ -60,15 +60,4 @@ resource "google_compute_instance_template" "server" {
       "${path.module}/scripts/${var.platform}/service.sh",
     ]
   }
-
-}
-
-resource "google_compute_instance_group_manager" "server" {
-  description = "Terraform consul instance group manager"
-  name = "terraform-consul"
-  instance_template = "${google_compute_instance_template.server.self_link}"
-  target_pools = [ "${google_compute_target_pool.server.self_link}" ]
-  base_instance_name = "consul"
-  zone = "${var.servers}"
-  target_size = "${var.zone}"
 }

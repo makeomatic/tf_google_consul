@@ -26,12 +26,17 @@ variable "ami" {
   }
 }
 
-variable "ssh_pub_keys" {
-  description "ssh public key to associate with the instance, format of keyname:ssh-rsa ...\n and so on"
+variable "networkName" {
+  description = "network to use for the instances"
+  default = "default"
+}
+
+variable "ssh_pub_path" {
+  description = "ssh public key path"
 }
 
 variable "key_path" {
-  description "ssh private key path to use with the google instance"
+  description = "ssh private key path to use with the google instance"
 }
 
 variable "instance_type" {
@@ -47,4 +52,9 @@ variable "servers" {
 variable "tagName" {
   default = "consul"
   description = "Name tag for the servers"
+}
+
+variable "consul_flags" {
+  default = ""
+  description = "extra configuration for consul"
 }
