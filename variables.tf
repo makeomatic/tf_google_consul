@@ -61,7 +61,10 @@ variable "consul_flags" {
   description = "extra configuration for consul"
 }
 
-variable "provider" {
-  default = "google"
-  description = "provider to use"
+variable "project" {
+  description = "google provider project"
+}
+
+variable "credentials" {
+  description = "google credentials"
 }
