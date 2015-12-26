@@ -6,6 +6,7 @@ provider "google" {
   project = "${var.project}"
   region = "${var.region}"
   credentials = "${var.credentials}"
+  account_file = "${var.credentials}"
 }
 
 resource "google_compute_instance" "consul" {
