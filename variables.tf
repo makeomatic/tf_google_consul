@@ -32,6 +32,7 @@ variable "ami" {
   description = "Google Disk Image Id"
   default = {
     europe-west1-ubuntu = "ubuntu-1404-trusty-v20150909a"
+    us-central1-ubuntu = "ubuntu-1404-trusty-v20151113"
   }
 }
 
