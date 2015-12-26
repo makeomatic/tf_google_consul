@@ -3,6 +3,7 @@
 #
 
 resource "google_compute_instance" "consul" {
+  provider = "${var.provider}"
   count = "${var.servers}"
   zone = "${var.zone}"
   name = "terraform-consul-${count.index}"

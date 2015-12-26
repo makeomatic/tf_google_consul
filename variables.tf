@@ -60,3 +60,8 @@ variable "consul_flags" {
   default = ""
   description = "extra configuration for consul"
 }
+
+variable "provider" {
+  default = "google"
+  description = "provider to use"
+}
