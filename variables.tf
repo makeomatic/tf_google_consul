@@ -23,7 +23,7 @@ variable "region" {
     description = "The region of Google Cloud, for AMI lookups."
 }
 
-variable "zone" {
+variable "region_zone" {
   description = "google zone to use for creation"
   default = "europe-west1-d"
 }

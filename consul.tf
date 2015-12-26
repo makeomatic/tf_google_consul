@@ -11,7 +11,7 @@ provider "google" {
 
 resource "google_compute_instance" "consul" {
   count = "${var.servers}"
-  zone = "${var.zone}"
+  zone = "${var.region_zone}"
   name = "terraform-consul-${count.index}"
   tags = [ "${var.tagName}", "master" ]
 
