@@ -21,7 +21,7 @@ resource "google_compute_instance" "consul" {
 
   # Create a new boot disk from an image
   disk {
-    image = "${lookup(var.ami, concat(var.region, "-", var.platform))}"
+    image = "${lookup(var.ami, format("%s-%s", var.region, var.platform))}"
     auto_delete = true
     type = "pd-standard"
   }
